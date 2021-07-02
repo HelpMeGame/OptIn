@@ -9,6 +9,11 @@ namespace OptIn
 {
     public class OptIn : Plugin<Config>
     {
+        public override string Author => "HelpMeGame";
+        public override Version Version => new Version(1, 0, 1);
+        public override Version RequiredExiledVersion => new Version(2,8,0);
+
+
         private static readonly Lazy<OptIn> lazyInstance = new Lazy<OptIn>(() => new OptIn());
         public static OptIn Instance => lazyInstance.Value;
 

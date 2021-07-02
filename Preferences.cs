@@ -21,7 +21,7 @@ namespace OptIn
             if (File.Exists(config.preferencesLocation))
             {
                 // Get values from file
-                Log.Info("Loading Player Preferneces...");
+                if (config.DebugLogs){Log.Info("Loading Player Preferneces...");}
 
                 using (StreamReader sr = new StreamReader(config.preferencesLocation)) 
                 {
@@ -32,19 +32,20 @@ namespace OptIn
                     sr.Close();
                 }
 
-                Log.Info("Player Preferences Loaded.");
+                if (config.DebugLogs){Log.Info("Player Preferences Loaded.");}
+                
                 
             }
             else
             {
-                Log.Warn("Player Preferences File Not Found.");
+                if (config.DebugLogs){Log.Warn("Player Preferences File Not Found.");}
             }
         }
 
         public static void SavePreferencesToFile()
         {
             // Save values to file
-            Log.Info("Saving Player Preferences...");
+            if (config.DebugLogs){Log.Info("Saving Player Preferences...");}
 
             string json = Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsSCP)) + "\n";
             json = String.Concat(json, Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsDClass)) + "\n");
@@ -52,7 +53,7 @@ namespace OptIn
             json = String.Concat(json, Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsScientist)));
 
             using (StreamWriter sw = new StreamWriter(config.preferencesLocation)){ sw.Write(json); sw.Close(); }
-            Log.Info("Player Preferences Saved.");
+            if (config.DebugLogs){Log.Info("Player Preferences Saved.");}
         }
 
         public static List<PlayerPreference> GetPlayerPreferences(List<Player> players)
