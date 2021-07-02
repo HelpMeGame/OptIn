@@ -12,15 +12,6 @@ namespace OptIn
         private static Random rng = new Random();
         private List<RoleType> SCPRoles = new List<RoleType>(new RoleType[] {RoleType.Scp049,RoleType.Scp0492, RoleType.Scp079, RoleType.Scp096, RoleType.Scp106, RoleType.Scp173, RoleType.Scp93953, RoleType.Scp93989 });
 
-        public void OnPlayerJoin(JoinedEventArgs ev)
-        {
-            PlayerPreference playerPreference = Preferences.GetPlayerPreference(ev.Player.UserId);
-            if (!playerPreference.wantsSCP && !playerPreference.wantsDClass && !playerPreference.wantsGaurd && !playerPreference.wantsScientist)
-            {
-                playerPreference = new PlayerPreference(ev.Player.UserId, ev.Player, true, true, true, true);
-                Preferences.ChangePreference(playerPreference);
-            }
-        }
 
         public void OnRoundStarted()
         {

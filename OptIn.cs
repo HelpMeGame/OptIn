@@ -41,14 +41,12 @@ namespace OptIn
         {
             handlers = new EventHandlers();
 
-            _Player.Joined += handlers.OnPlayerJoin;
             _Server.RoundStarted += handlers.OnRoundStarted;
             _Server.RestartingRound += Preferences.SavePreferencesToFile;
         }
 
         public void UnregisterEvents()
         {
-            _Player.Joined -= handlers.OnPlayerJoin;
             _Server.RoundStarted -= handlers.OnRoundStarted;
             _Server.RestartingRound -= Preferences.SavePreferencesToFile;
 
