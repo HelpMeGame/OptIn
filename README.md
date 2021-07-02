@@ -6,7 +6,7 @@ After installing OptIn, you can simply open the console (`~` by default) and typ
 
 - SCP
 - DClass
-- Gaurd
+- Guard
 - Scientist
 
 ## How it works
