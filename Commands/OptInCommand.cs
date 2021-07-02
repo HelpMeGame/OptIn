@@ -16,7 +16,7 @@ namespace OptIn.Commands
 
         private List<string> SCPArgs = new List<string>(new string[] {"scp", "monster"});
         private List<string> DClassArgs = new List<string>(new string[] { "d-class","dclass","dboi","d-boi","d-boy","dboy" });
-        private List<string> GaurdArgs = new List<string>(new string[] { "gaurd","facility" });
+        private List<string> GuardArgs = new List<string>(new string[] { "guard","facility" });
         private List<string> ScientistArgs = new List<string>(new string[] { "scientist" });
 
 
@@ -50,7 +50,7 @@ namespace OptIn.Commands
                         response = String.Concat(response, $"Queue for DClass is now {playerOptIns.wantsDClass}.\n");
 
                     }
-                    else if (GaurdArgs.Contains(arg))
+                    else if (GuardArgs.Contains(arg))
                     {
                         // Change Gaurd Stuff
                         if (playerOptIns.wantsGaurd) { playerOptIns.wantsGaurd = false; } else { playerOptIns.wantsGaurd = true; }
