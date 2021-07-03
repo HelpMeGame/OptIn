@@ -43,21 +43,21 @@ namespace OptIn
                             swapRole = true;
                         }
                     }
-                    else if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsGaurd)
+                    if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsGaurd && !swapRole)
                     {
                         if (preferences[i].wantsGaurd)
                         {
                             swapRole = true;
                         }
                     }
-                    else if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsDClass)
+                    if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsDClass && !swapRole)
                     {
                         if (preferences[i].wantsDClass)
                         {
                             swapRole = true;
                         }
                     }
-                    else if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsScientist)
+                    if (currentPreference.player.Role == RoleType.ClassD && !currentPreference.wantsScientist && !swapRole)
                     {
                         if (preferences[i].wantsScientist)
                         {
