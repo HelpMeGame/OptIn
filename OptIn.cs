@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 
@@ -13,18 +14,14 @@ namespace OptIn
         public override Version Version => new Version(1, 0, 2);
         public override Version RequiredExiledVersion => new Version(2,8,0);
 
-
-        private static readonly Lazy<OptIn> lazyInstance = new Lazy<OptIn>(() => new OptIn());
-        public static OptIn Instance => lazyInstance.Value;
+        public static OptIn singleton { get; } = new OptIn();
 
         public override PluginPriority Priority { get; } = PluginPriority.Default;
         
         private EventHandlers handlers;
 
 
-        private OptIn()
-        {
-        }
+        private OptIn(){}
 
         public override void OnEnabled()
         {
@@ -52,5 +49,6 @@ namespace OptIn
 
             handlers = null;
         }
+
     }
 }

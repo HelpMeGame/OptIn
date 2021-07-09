@@ -9,11 +9,12 @@ namespace OptIn
 {
     class Preferences
     {
-        static Config config = OptIn.Instance.Config;
+        static Config config = OptIn.singleton.Config;
         public static List<string> wantsSCP = new List<string>();
         public static List<string> wantsDClass = new List<string>();
         public static List<string> wantsGuard = new List<string>();
         public static List<string> wantsScientist = new List<string>();
+        public static Dictionary<string, List<int>> playerPriorityOrder = new Dictionary<string, List<int>>();
 
 
         public static void GetPreferencesFromFile()
@@ -21,39 +22,41 @@ namespace OptIn
             if (File.Exists(config.preferencesLocation))
             {
                 // Get values from file
-                if (config.DebugLogs){Log.Info("Loading Player Preferneces...");}
+                if (config.DebugLogs) { Log.Info("Loading Player Preferneces..."); }
 
-                using (StreamReader sr = new StreamReader(config.preferencesLocation)) 
+                using (StreamReader sr = new StreamReader(config.preferencesLocation))
                 {
                     wantsSCP = JsonSerializer.Deserialize<List<string>>(Encoding.ASCII.GetBytes(sr.ReadLine()));
                     wantsDClass = JsonSerializer.Deserialize<List<string>>(Encoding.ASCII.GetBytes(sr.ReadLine()));
                     wantsGuard = JsonSerializer.Deserialize<List<string>>(Encoding.ASCII.GetBytes(sr.ReadLine()));
                     wantsScientist = JsonSerializer.Deserialize<List<string>>(Encoding.ASCII.GetBytes(sr.ReadLine()));
+                    playerPriorityOrder = JsonSerializer.Deserialize<Dictionary<string, List<int>>>(Encoding.ASCII.GetBytes(sr.ReadLine()));
                     sr.Close();
                 }
 
-                if (config.DebugLogs){Log.Info("Player Preferences Loaded.");}
-                
-                
+                if (config.DebugLogs) { Log.Info("Player Preferences Loaded."); }
+
+
             }
             else
             {
-                if (config.DebugLogs){Log.Warn("Player Preferences File Not Found.");}
+                if (config.DebugLogs) { Log.Warn("Player Preferences File Not Found."); }
             }
         }
 
         public static void SavePreferencesToFile()
         {
             // Save values to file
-            if (config.DebugLogs){Log.Info("Saving Player Preferences...");}
+            if (config.DebugLogs) { Log.Info("Saving Player Preferences..."); }
 
             string json = Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsSCP)) + "\n";
-            json = String.Concat(json, Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsDClass)) + "\n");
-            json = String.Concat(json, Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsGuard)) + "\n");
-            json = String.Concat(json, Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsScientist)));
+            json += Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsDClass)) + "\n";
+            json += Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsGuard)) + "\n";
+            json += Encoding.UTF8.GetString(JsonSerializer.Serialize(wantsScientist)) + "\n";
+            json += Encoding.UTF8.GetString(JsonSerializer.Serialize(playerPriorityOrder));
 
-            using (StreamWriter sw = new StreamWriter(config.preferencesLocation)){ sw.Write(json); sw.Close(); }
-            if (config.DebugLogs){Log.Info("Player Preferences Saved.");}
+            using (StreamWriter sw = new StreamWriter(config.preferencesLocation)) { sw.Write(json); sw.Close(); }
+            if (config.DebugLogs) { Log.Info("Player Preferences Saved."); }
         }
 
         public static List<PlayerPreference> GetPlayerPreferences(List<Player> players)
@@ -62,14 +65,15 @@ namespace OptIn
             foreach (var player in players)
             {
                 string ID = player.UserId;
-                preferences.Add(new PlayerPreference(ID, player, wantsSCP.Contains(ID), wantsDClass.Contains(ID), wantsGuard.Contains(ID), wantsScientist.Contains(ID)));
+
+                preferences.Add(new PlayerPreference(ID, player, wantsSCP.Contains(ID), wantsDClass.Contains(ID), wantsGuard.Contains(ID), wantsScientist.Contains(ID), GetOrderKey(ID)));
             }
             return preferences;
         }
 
         public static PlayerPreference GetPlayerPreference(String ID)
         {
-            return new PlayerPreference(ID, null, wantsSCP.Contains(ID), wantsDClass.Contains(ID), wantsGuard.Contains(ID), wantsScientist.Contains(ID));
+            return new PlayerPreference(ID, null, wantsSCP.Contains(ID), wantsDClass.Contains(ID), wantsGuard.Contains(ID), wantsScientist.Contains(ID), GetOrderKey(ID));
 
         }
 
@@ -89,6 +93,21 @@ namespace OptIn
             if (preference.wantsScientist) { if (!wantsScientist.Contains(ID)) { wantsScientist.Add(ID); } }
             else { if (wantsScientist.Contains(ID)) { wantsScientist.Remove(ID); } }
 
+            if (playerPriorityOrder.ContainsKey(ID)) { playerPriorityOrder[ID] = preference.priorityOrder; }
+            else { playerPriorityOrder.Add(ID, preference.priorityOrder); }
+
+        }
+
+        public static List<int> GetOrderKey(string ID)
+        {
+            try
+            {
+                return playerPriorityOrder[ID];
+            }
+            catch (KeyNotFoundException)
+            {
+                return new List<int>(new int[] { 1, 2, 3, 4 });
+            }
         }
     }
 
@@ -97,8 +116,9 @@ namespace OptIn
         public string userID;
         public Player player;
         public bool wantsSCP, wantsDClass, wantsGaurd, wantsScientist;
+        public List<int> priorityOrder;
 
-        public PlayerPreference(string _userID, Player _player = null, bool _wantsSCP = true, bool _wantsDClass = true, bool _wantsGaurd = true, bool _wantsScientist = true)
+        public PlayerPreference(string _userID, Player _player = null, bool _wantsSCP = true, bool _wantsDClass = true, bool _wantsGaurd = true, bool _wantsScientist = true, List<int> _priorityOrder = null)
         {
             userID = _userID;
             player = _player;
@@ -106,6 +126,7 @@ namespace OptIn
             wantsDClass = _wantsDClass;
             wantsGaurd = _wantsGaurd;
             wantsScientist = _wantsScientist;
+            priorityOrder = _priorityOrder;
         }
     }
 }

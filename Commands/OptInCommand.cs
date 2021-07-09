@@ -14,9 +14,9 @@ namespace OptIn.Commands
 
         public string Description { get; } = "Opt in or out of certain roles";
 
-        private List<string> SCPArgs = new List<string>(new string[] {"scp", "monster"});
-        private List<string> DClassArgs = new List<string>(new string[] { "d-class","dclass","dboi","d-boi","d-boy","dboy" });
-        private List<string> GuardArgs = new List<string>(new string[] { "guard","facility" });
+        private List<string> SCPArgs = new List<string>(new string[] { "scp", "monster" });
+        private List<string> DClassArgs = new List<string>(new string[] { "d-class", "dclass", "dboi", "d-boi", "d-boy", "dboy" });
+        private List<string> GuardArgs = new List<string>(new string[] { "guard", "facility" });
         private List<string> ScientistArgs = new List<string>(new string[] { "scientist" });
 
 
@@ -24,11 +24,11 @@ namespace OptIn.Commands
         {
             if (sender is PlayerCommandSender player)
             {
-                PlayerPreference playerOptIns = Preferences.GetPlayerPreference(player.SenderId);
+                PlayerPreference playerPreference = Preferences.GetPlayerPreference(player.SenderId);
 
                 if (arguments.Array.Length <= 1)
                 {
-                    response = $"\nQueue for SCP: {playerOptIns.wantsSCP}\nQueue for DClass: {playerOptIns.wantsDClass}\nQueue for Gaurd: {playerOptIns.wantsGaurd}\nQueue for Scientist: {playerOptIns.wantsScientist}";
+                    response = $"\nQueue for SCP: {playerPreference.wantsSCP}\nQueue for DClass: {playerPreference.wantsDClass}\nQueue for Guard: {playerPreference.wantsGaurd}\nQueue for Scientist: {playerPreference.wantsScientist}";
                     return true;
                 }
 
@@ -40,36 +40,37 @@ namespace OptIn.Commands
                     if (SCPArgs.Contains(arg))
                     {
                         // Change SCP Stuff
-                        if (playerOptIns.wantsSCP) { playerOptIns.wantsSCP = false; } else { playerOptIns.wantsSCP = true; }
-                        response = String.Concat(response, $"Queue for a SCP is now {playerOptIns.wantsSCP}.\n");
+                        if (playerPreference.wantsSCP) { playerPreference.wantsSCP = false; } else { playerPreference.wantsSCP = true; }
+                        response = String.Concat(response, $"Queue for a SCP is now {playerPreference.wantsSCP}.\n");
                     }
                     else if (DClassArgs.Contains(arg))
                     {
                         // Change DClass Stuff
-                        if (playerOptIns.wantsDClass) { playerOptIns.wantsDClass = false; } else { playerOptIns.wantsDClass = true; }
-                        response = String.Concat(response, $"Queue for DClass is now {playerOptIns.wantsDClass}.\n");
+                        if (playerPreference.wantsDClass) { playerPreference.wantsDClass = false; } else { playerPreference.wantsDClass = true; }
+                        response = String.Concat(response, $"Queue for DClass is now {playerPreference.wantsDClass}.\n");
 
                     }
                     else if (GuardArgs.Contains(arg))
                     {
                         // Change Gaurd Stuff
-                        if (playerOptIns.wantsGaurd) { playerOptIns.wantsGaurd = false; } else { playerOptIns.wantsGaurd = true; }
-                        response = String.Concat(response, $"Queue for Gaurd role is now {playerOptIns.wantsGaurd}.\n");
+                        if (playerPreference.wantsGaurd) { playerPreference.wantsGaurd = false; } else { playerPreference.wantsGaurd = true; }
+                        response = String.Concat(response, $"Queue for Gaurd role is now {playerPreference.wantsGaurd}.\n");
 
                     }
                     else if (ScientistArgs.Contains(arg))
                     {
                         // Change Scientist Stuff
-                        if (playerOptIns.wantsScientist) { playerOptIns.wantsScientist = false; } else { playerOptIns.wantsScientist = true; }
-                        response = String.Concat(response, $"Queue for Scientist role is now {playerOptIns.wantsScientist}.\n");
+                        if (playerPreference.wantsScientist) { playerPreference.wantsScientist = false; } else { playerPreference.wantsScientist = true; }
+                        response = String.Concat(response, $"Queue for Scientist role is now {playerPreference.wantsScientist}.\n");
 
                     }
                     else
                     {
-                        response = String.Concat(response,$"Argument \"{arg}\" is not a recognized role.\n");
+                        response = String.Concat(response, $"Argument \"{arg}\" is not a recognized role.\n");
+                        return false;
                     }
                 }
-                Preferences.ChangePreference(playerOptIns);
+                Preferences.ChangePreference(playerPreference);
                 return true;
             }
             else
