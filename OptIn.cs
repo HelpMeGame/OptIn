@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using Exiled.API.Enums;
 using Exiled.API.Features;
@@ -11,7 +13,7 @@ namespace OptIn
     public class OptIn : Plugin<Config>
     {
         public override string Author => "HelpMeGame";
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 1, 1);
         public override Version RequiredExiledVersion => new Version(2,8,0);
 
         public static OptIn singleton { get; } = new OptIn();
@@ -25,6 +27,10 @@ namespace OptIn
 
         public override void OnEnabled()
         {
+            Log.Warn(Config.preferencesLocation);
+            Config.preferencesLocation = Config.preferencesLocation.Replace('\\', Path.DirectorySeparatorChar);
+            Log.Warn(Config.preferencesLocation);
+
             RegisterEvents();
             Preferences.GetPreferencesFromFile();
         }
